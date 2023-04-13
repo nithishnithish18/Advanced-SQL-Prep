@@ -48,3 +48,19 @@ select seller_id,(case
 when tmp=1 then "Yes"
 else "No"
 end) as fav_brand from cte3
+
+
+--optimized
+
+with rkorders as (
+select *, rank() over(partition by seller_id order by order_date asc) as rn
+from orders
+)
+
+select 
+u.user_id as seller_id,
+case 
+when  i.item_brand = u.favorite_brand then "Yes" else "No" end as item_fav_brand
+from users u 
+left join rkorders o on  o.seller_id = u.user_id and rn=2   
+left join items i on i.item_id = o.item_id
