@@ -17,9 +17,11 @@ insert into transactions values
 
 select * from transactions
 
+-- Solution using Self Join
+ 
 --customer retention
 
--- select
+select
 month(this_month.order_date) as month,
 count(distinct last_month.cust_id) as retained_customers
 from transactions this_month left join transactions last_month 
@@ -39,12 +41,23 @@ where  this_month.cust_id is null
 group by month(last_month.order_date)
 
 
+-- my solution using Lead and Lag
+--customer retention
+with cte as
+(
+select
+*,
+lead(order_date,1) over(partition by cust_id order by order_date desc) as last_date
+from transactions
+)
+select month(order_date) as month,count(last_date) as retained_customers from cte group by month(order_date)
 
 
 
-
-
-
-
-
-
+-- cutomer churn
+with cte1 as (
+select  *, lag(order_date,1) over(partition by cust_id order by order_date desc) as d
+from transactions
+)
+select month(order_date) as month, count(distinct cust_id) as churn_customers from cte1  where d is null group by month(order_date)
+select * from cte1
