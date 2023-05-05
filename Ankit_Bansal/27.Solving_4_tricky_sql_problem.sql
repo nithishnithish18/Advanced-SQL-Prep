@@ -54,6 +54,27 @@ from students a left join avg_cte b on a.subject =b.subject
 where a.marks > b.avg_mark
 
 
+--2.get the percentage of students who score more than 90 in any subject among the total students
+
+-- using CTE 
+
+with cte as 
+(
+  select 
+  studentid,
+  Max(case when marks > 90 then 1 else 0 end) as flag
+  from students
+  group by studentid
+)
+select 1.0 * sum(flag)/count(distinct studentid) * 100 from  cte
+
+
+--using aggregation functions
+
+select 
+1.0 * count(distinct case when marks > 90 then studentid else NULL end) / count(distinct studentid) * 100 as perc
+from students
+
 
 
 
