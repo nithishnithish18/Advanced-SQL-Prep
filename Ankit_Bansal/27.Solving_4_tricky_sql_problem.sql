@@ -76,7 +76,31 @@ select
 from students
 
 
+--3. get the second highest and second lowest marks for each subject
 
+--using CTE
+
+with cte_2h as (
+select 
+subject,
+marks as second_highest_marks,
+dense_rank() over(partition by subject order by marks desc) as rnh 
+from students
+),
+cte_2l as (
+select 
+subject,
+marks as second_lowest_marks,
+dense_rank() over(partition by subject order by marks asc) as rnl
+from students
+)
+select 
+distinct a.subject,
+second_highest_marks,
+second_lowest_marks
+from students a left join cte_2l b on a.subject = b.subject
+left join cte_2h c on a.subject = c.subject
+where rnl = 2 and rnh = 2
 
 
 
