@@ -105,6 +105,18 @@ where rnl = 2 and rnh = 2
 
 
 
+--4. For each subject and test identify if their marks increased or decreased from the previous test
 
-
+-- using lag()
+select
+studentid,
+subject,
+testdate,
+testid,
+marks,
+lag(marks,1,marks) over(partition by studentid order by testdate,subject asc) as prev_mark,
+case 
+when marks > lag(marks,1,marks) over(partition by studentid order by testdate asc) then "inc"
+else "dec" end  as flag
+from  students
 
