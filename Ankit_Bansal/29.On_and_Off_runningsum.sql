@@ -12,15 +12,19 @@ values
 --find on and off time of a event
 --use running sum trick to create group key
 
+
 with cte as (select 
 cast(concat(substring(event_time,1,2),substring(event_time,4,2)) as int) as event_time,
 status,
 lag(status,1,status) over(order by event_time asc)as prev_status
-from event_status)
+from event_status),
 
+cte2 as( 
 select
-min(event_time)
-sum(
-case when status = "on" and prev_status="off" then 1 else 0 end ) over(order by event_time asc) as  g_key
-
+*,
+sum(case when status = "on" and prev_status="off" then 1 else 0 end ) over(order by event_time asc) as  g_key
 from cte
+)
+select min(event_time),max(event_time),count(1)-1 as on_count
+from cte2
+group by g_key
