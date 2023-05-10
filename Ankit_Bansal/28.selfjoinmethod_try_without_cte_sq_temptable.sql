@@ -24,6 +24,7 @@ select * from int_orders;
 
 
 --Using self join
+--get max amount order details of each sales person without using cte,temp table,windows functions ects..
 
 select 
 a.*
