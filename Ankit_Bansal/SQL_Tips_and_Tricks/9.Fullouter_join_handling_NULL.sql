@@ -21,11 +21,11 @@ insert into emp_2021 values (1,'Developer'), (2,'Developer'),(3,'Manager'),(5,'T
 
 select isnull(a.emp_id,b.emp_id) as emp_id,
 case 
-when a.designation is not null and b.designation is not null and a.designation != b.designation then "Promoted"
-when a.designation is null and  b.designation is not null then "New"
+when a.designation != b.designation then "Promoted"
+when a.designation is null then "New"
 else "Resigned"
 end as col
 from
 emp_2020 a full outer join emp_2021 b
 on a.emp_id = b.emp_id
-where  isnull(a.designation,"xxx") != isnull(b.designation,"xxx")
+where  isnull(a.designation,"xxx") != isnull(b.designation,"yyy")
