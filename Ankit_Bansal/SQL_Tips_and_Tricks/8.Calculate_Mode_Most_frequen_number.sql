@@ -9,7 +9,6 @@ insert into mode values (1),(2),(2),(3),(3),(3),(3),(4),(5),(4),(4),(4);
 --Calcualte MODE from the given table
 
 
-
 --Method 1 - Using Subquery
 with freq_cte as (
 select id,count(1) as freq from mode group by id
